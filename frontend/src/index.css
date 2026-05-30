@@ -507,7 +507,21 @@ svg.map { width: 100%; height: auto; display: block; }
 .card p { font-size: 17px; color: var(--narr-fg); margin-bottom: 14px; }
 .card p.quote { font-style: italic; color: var(--quote-fg); }
 .card p.coin { font-size: 46px; margin-bottom: 6px; }
-.card .btn { padding: 13px 26px; margin-top: 14px; }
+.card .btn { padding: 13px 26px; }
+.card-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+.card-status {
+  min-height: 18px;
+  margin-top: 10px;
+  font-size: 13.5px;
+  font-style: italic;
+  color: var(--muted-fg);
+}
 @media (max-width: 520px) {
   .overlay { padding: 18px; }
   .card p { font-size: 16px; }
