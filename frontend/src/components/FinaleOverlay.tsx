@@ -14,17 +14,20 @@ export default function FinaleOverlay({ show, finale, onClose }: Props) {
     const title = 'The Sultanahmet Cipher';
     const url = window.location.href;
     const text = 'I solved The Sultanahmet Cipher — a grounded symbology hunt through real Istanbul landmarks.';
+    // Cast once so TypeScript doesn't narrow clipboard away in the else-branch.
+    const nav = window.navigator as Navigator & {
+      share?(data: { title: string; text: string; url: string }): Promise<void>;
+    };
 
     try {
-      if ('share' in navigator) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        await (navigator as any).share({ title, text, url });
+      if (nav.share) {
+        await nav.share({ title, text, url });
         setShareStatus('idle');
         return;
       }
 
-      if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(url);
+      if (nav.clipboard?.writeText) {
+        await nav.clipboard.writeText(url);
         setShareStatus('copied');
         setTimeout(() => setShareStatus('idle'), 2000);
         return;
