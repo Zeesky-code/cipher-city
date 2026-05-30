@@ -14,7 +14,7 @@ export default function IntroOverlay({ show, intro, onStart }: Props) {
         <p className="coin"><span className="spin">🪙</span></p>
         <h2>{intro.heading}</h2>
         {intro.body.map((line, i) => (
-          <p key={i} style={i === 1 ? { fontStyle: 'italic', color: '#e9cd7d' } : undefined}>
+          <p key={i} className={i === 1 ? 'quote' : undefined}>
             {line}
           </p>
         ))}

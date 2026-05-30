@@ -18,7 +18,12 @@ export default function HuntMap({ stops, solved, viewing, mapTitle, mapSub, onSe
     <>
       <div className="map-title">{mapTitle}</div>
       <div className="map-sub">{mapSub}</div>
-      <svg className="map" viewBox="0 0 620 470" xmlns="http://www.w3.org/2000/svg">
+      <svg
+        className="map"
+        viewBox="0 0 620 470"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-label="Stylised hunt map with selectable seals"
+      >
         <defs>
           <radialGradient id="parchG" cx="35%" cy="25%" r="90%">
             <stop offset="0%" stopColor="#e7d6ac" />

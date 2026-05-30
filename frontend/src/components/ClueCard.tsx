@@ -70,12 +70,17 @@ export default function ClueCard({ stop, index, total, isSolved, onSubmit, onFla
               onKeyDown={e => { if (e.key === 'Enter') handleCheck(); }}
               className={wrong ? 'wrong' : ''}
               autoComplete="off"
+              autoCapitalize="characters"
+              autoCorrect="off"
+              spellCheck={false}
+              inputMode="text"
               placeholder="your answer"
               maxLength={20}
+              aria-label="Answer"
             />
             <button className="btn" onClick={handleCheck}>Decipher</button>
           </div>
-          <div className="err">{error}</div>
+          <div className="err" aria-live="polite">{error}</div>
         </>
       )}
 

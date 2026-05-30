@@ -15,7 +15,7 @@ export default function FinaleOverlay({ show, finale, onClose }: Props) {
         {finale.body.map((line, i) => {
           if (line.includes('PALIMPSEST')) {
             return (
-              <p key={i} style={{ color: '#e9cd7d' }}>
+              <p key={i} className="quote">
                 You have been reading a <b>PALIMPSEST</b> all along.{' '}
                 {line.split('PALIMPSEST all along.')[1]}
               </p>
