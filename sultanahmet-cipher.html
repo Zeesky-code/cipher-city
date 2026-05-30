@@ -1,0 +1,462 @@
+<!-- THE SULTANAHMET CIPHER — a grounded symbology hunt through real Istanbul landmarks -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Sultanahmet Cipher</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;800&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
+
+:root{
+  --ink:#160d06;
+  --ink-2:#241608;
+  --parch:#e7d6ac;
+  --parch-dim:#cbb585;
+  --gold:#c9a24a;
+  --gold-bright:#e9cd7d;
+  --blood:#7c2118;
+  --blood-deep:#4c130d;
+  --seal:#8d2418;
+  --shadow:rgba(0,0,0,.55);
+  --mono:'Courier New',ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%}
+body{
+  font-family:'EB Garamond',Georgia,serif;
+  color:var(--parch);
+  background:
+    radial-gradient(120% 90% at 20% -10%, #3a2410 0%, transparent 55%),
+    radial-gradient(120% 120% at 110% 120%, #2b1709 0%, transparent 60%),
+    linear-gradient(160deg,#1a1006 0%, #0e0904 100%);
+  background-attachment:fixed;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+/* film grain */
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:50;opacity:.05;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.wrap{max-width:1180px;margin:0 auto;padding:38px 22px 90px;position:relative;z-index:1}
+
+/* ---------- header ---------- */
+header{text-align:center;margin-bottom:30px;position:relative}
+.kicker{font-family:'Cinzel',serif;letter-spacing:.42em;font-size:11px;color:var(--gold);
+  text-transform:uppercase;opacity:.85;margin-bottom:14px}
+h1{font-family:'Cinzel',serif;font-weight:800;font-size:clamp(34px,6vw,64px);line-height:.98;
+  color:var(--parch);text-shadow:0 2px 0 #000,0 0 30px rgba(201,162,74,.25)}
+h1 .sub{display:block;font-size:.32em;font-weight:500;letter-spacing:.5em;color:var(--gold);margin-top:16px}
+.rule{display:flex;align-items:center;justify-content:center;gap:14px;margin:22px auto 0;max-width:420px;color:var(--gold)}
+.rule::before,.rule::after{content:"";height:1px;flex:1;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.rule span{font-size:18px}
+
+/* ---------- layout ---------- */
+.board{display:grid;grid-template-columns:1.05fr .95fr;gap:30px;align-items:start;margin-top:30px}
+@media(max-width:880px){.board{grid-template-columns:1fr}}
+
+.panel{
+  background:
+    radial-gradient(140% 120% at 0% 0%, rgba(231,214,172,.07), transparent 60%),
+    linear-gradient(180deg, rgba(28,18,8,.85), rgba(14,9,4,.92));
+  border:1px solid rgba(201,162,74,.32);
+  border-radius:6px;
+  box-shadow:0 22px 50px var(--shadow), inset 0 0 60px rgba(0,0,0,.4);
+  position:relative;
+}
+.panel::before{content:"";position:absolute;inset:7px;border:1px solid rgba(201,162,74,.16);border-radius:3px;pointer-events:none}
+.panel-pad{padding:22px}
+
+/* ---------- map ---------- */
+.map-title{font-family:'Cinzel',serif;font-size:13px;letter-spacing:.28em;color:var(--gold);
+  text-align:center;padding:16px 0 4px;text-transform:uppercase}
+.map-sub{text-align:center;font-style:italic;color:var(--parch-dim);font-size:14px;margin-bottom:6px}
+svg.map{width:100%;height:auto;display:block}
+.seal{cursor:pointer;transition:transform .25s}
+.seal:hover{transform:translateY(-2px)}
+.seal .disc{transition:fill .4s,stroke .4s}
+.seal.locked{opacity:.55;cursor:not-allowed}
+.seal.locked:hover{transform:none}
+.seal.current .ring{animation:pulse 2.2s ease-in-out infinite;transform-origin:center}
+@keyframes pulse{0%,100%{opacity:.25}50%{opacity:.9}}
+.seal.solved .disc{fill:var(--seal)}
+.seal .num{font-family:'Cinzel',serif;font-weight:800;fill:var(--parch);font-size:15px;text-anchor:middle}
+.legend{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;font-size:12.5px;color:var(--parch-dim);
+  padding:6px 14px 18px}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+
+/* ---------- clue card ---------- */
+.stage{min-height:420px;display:flex;flex-direction:column}
+.badge{font-family:'Cinzel',serif;letter-spacing:.2em;font-size:11px;color:var(--gold);text-transform:uppercase}
+.stop-name{font-family:'Cinzel',serif;font-size:24px;color:var(--parch);margin:6px 0 2px;line-height:1.1}
+.stop-where{font-style:italic;color:var(--parch-dim);font-size:14px;margin-bottom:14px}
+.narr{color:#ddcba2;margin-bottom:14px}
+.fact{border-left:2px solid var(--gold);padding:8px 0 8px 14px;margin:0 0 16px;font-size:15px;color:#e7d6ac}
+.fact b{color:var(--gold-bright);font-weight:600}
+
+.cipher-box{
+  background:linear-gradient(180deg,#efe2bf,#ddc99a);
+  color:#2a1c0c;border-radius:4px;padding:16px 18px;margin:4px 0 14px;
+  box-shadow:0 8px 22px rgba(0,0,0,.45);position:relative;transform:rotate(-.5deg);
+}
+.cipher-box::after{content:"";position:absolute;inset:0;border:1px dashed rgba(42,28,12,.35);border-radius:4px;margin:5px}
+.cipher-label{font-family:'Cinzel',serif;font-size:10.5px;letter-spacing:.25em;text-transform:uppercase;color:#7c2118;margin-bottom:8px}
+.cipher-text{font-family:var(--mono);font-size:21px;letter-spacing:.14em;font-weight:700;color:#1c1208;word-spacing:.1em}
+.cipher-prompt{font-style:italic;font-size:13.5px;color:#5a4326;margin-top:8px}
+
+.input-row{display:flex;gap:10px;margin-top:6px}
+.input-row input{
+  flex:1;background:rgba(0,0,0,.35);border:1px solid rgba(201,162,74,.4);border-radius:4px;
+  color:var(--parch);font-family:var(--mono);font-size:16px;letter-spacing:.12em;padding:12px 14px;text-transform:uppercase;
+}
+.input-row input:focus{outline:none;border-color:var(--gold-bright);box-shadow:0 0 0 2px rgba(201,162,74,.2)}
+.btn{
+  font-family:'Cinzel',serif;font-weight:600;letter-spacing:.12em;font-size:13px;cursor:pointer;
+  background:linear-gradient(180deg,var(--gold-bright),var(--gold));color:#241608;border:none;border-radius:4px;
+  padding:0 20px;text-transform:uppercase;transition:filter .2s,transform .1s;white-space:nowrap;
+}
+.btn:hover{filter:brightness(1.08)}
+.btn:active{transform:translateY(1px)}
+.btn.ghost{background:transparent;border:1px solid var(--gold);color:var(--gold)}
+.subactions{display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:12px;flex-wrap:wrap}
+.linkish{background:none;border:none;color:var(--gold);font-family:'EB Garamond';font-size:14px;
+  font-style:italic;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:0}
+.nav-link{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.14em;color:var(--parch-dim);text-decoration:none;
+  border:1px solid rgba(201,162,74,.3);border-radius:20px;padding:7px 14px;transition:.2s;text-transform:uppercase}
+.nav-link:hover{color:var(--gold);border-color:var(--gold)}
+.hint{font-size:14px;color:var(--parch-dim);font-style:italic;margin-top:12px;
+  border-top:1px dotted rgba(201,162,74,.3);padding-top:12px;display:none}
+.hint.show{display:block}
+.err{color:#e8917f;font-size:13.5px;font-style:italic;margin-top:10px;min-height:18px}
+
+/* ---------- cryptex / inventory ---------- */
+.cryptex{margin-top:26px}
+.cryptex h3{font-family:'Cinzel',serif;font-size:12px;letter-spacing:.26em;color:var(--gold);
+  text-transform:uppercase;text-align:center;margin-bottom:12px}
+.frags{display:flex;flex-direction:column;gap:8px}
+.frag{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--parch-dim);
+  border:1px solid rgba(201,162,74,.18);border-radius:4px;padding:9px 13px;background:rgba(0,0,0,.2)}
+.frag.got{color:var(--gold-bright);border-color:rgba(201,162,74,.5);background:rgba(124,33,24,.18)}
+.frag .dot{width:9px;height:9px;border-radius:50%;background:rgba(201,162,74,.25);flex:none}
+.frag.got .dot{background:var(--gold-bright);box-shadow:0 0 8px var(--gold-bright)}
+.frag .key{font-family:var(--mono);margin-left:auto;letter-spacing:.1em}
+
+/* ---------- overlays ---------- */
+.overlay{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;
+  padding:24px;background:radial-gradient(circle at 50% 30%, rgba(40,24,10,.9), rgba(8,5,2,.97));
+  opacity:0;visibility:hidden;transition:opacity .5s}
+.overlay.show{opacity:1;visibility:visible}
+.card{max-width:560px;text-align:center;animation:rise .7s cubic-bezier(.2,.8,.2,1)}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+.card .kicker{margin-bottom:18px}
+.card h2{font-family:'Cinzel',serif;font-size:clamp(26px,5vw,42px);color:var(--parch);margin-bottom:18px;line-height:1.05}
+.card p{font-size:17px;color:#ddcba2;margin-bottom:14px}
+.card p.coin{font-size:46px;margin-bottom:6px}
+.card .btn{padding:13px 26px;margin-top:14px}
+.spin{display:inline-block;animation:rotate 9s linear infinite}
+@keyframes rotate{to{transform:rotate(360deg)}}
+.reset{position:fixed;bottom:16px;right:18px;z-index:40}
+.foot{text-align:center;color:var(--parch-dim);font-size:12.5px;margin-top:46px;font-style:italic;opacity:.75}
+.unlock-flash{animation:flash .6s ease}
+@keyframes flash{0%{box-shadow:0 0 0 0 rgba(233,205,125,.6)}100%{box-shadow:0 0 0 26px rgba(233,205,125,0)}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="kicker">A Symbology Hunt Through Old Stamboul</div>
+    <h1>The Sultanahmet Cipher<span class="sub">Istanbul · On Foot</span></h1>
+    <div class="rule"><span>✦</span></div>
+  </header>
+
+  <div class="board">
+    <!-- MAP -->
+    <div class="panel">
+      <div class="map-title">The Spine of the Hippodrome</div>
+      <div class="map-sub">five marks · roughly 800 metres · tap a solved seal to revisit</div>
+      <svg class="map" viewBox="0 0 620 470" id="mapSvg" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="parchG" cx="35%" cy="25%" r="90%">
+            <stop offset="0%" stop-color="#e7d6ac"/>
+            <stop offset="60%" stop-color="#d4bd8c"/>
+            <stop offset="100%" stop-color="#b89e6c"/>
+          </radialGradient>
+          <filter id="rough"><feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="n"/>
+            <feDisplacementMap in="SourceGraphic" in2="n" scale="3"/></filter>
+        </defs>
+        <!-- parchment -->
+        <rect x="14" y="14" width="592" height="442" rx="6" fill="url(#parchG)"/>
+        <rect x="14" y="14" width="592" height="442" rx="6" fill="none" stroke="#8a6f3e" stroke-width="2" opacity=".6"/>
+        <rect x="26" y="26" width="568" height="418" rx="3" fill="none" stroke="#8a6f3e" stroke-width="1" opacity=".35"/>
+        <!-- water hints -->
+        <path d="M14,70 Q150,40 300,58 T606,46 L606,14 L14,14 Z" fill="#9fb09a" opacity=".35"/>
+        <text x="120" y="44" font-family="Cinzel" font-size="13" fill="#5d6b50" opacity=".7" font-style="italic">The Golden Horn</text>
+        <path d="M560,30 Q585,200 560,440 L606,440 L606,30 Z" fill="#9fb09a" opacity=".35"/>
+        <text x="566" y="250" font-family="Cinzel" font-size="12" fill="#5d6b50" opacity=".7" transform="rotate(90 575,250)">The Bosphorus</text>
+        <!-- land label -->
+        <text x="60" y="250" font-family="Cinzel" font-size="15" fill="#7c5a2e" opacity=".5" letter-spacing="3">SARAYBURNU</text>
+        <!-- decorative serpent doodle (Delphi nod) -->
+        <path d="M80,400 q18,-26 0,-44 q-18,-18 4,-36 q22,-16 6,-34" fill="none" stroke="#7c2118" stroke-width="2.4" opacity=".5" stroke-linecap="round" filter="url(#rough)"/>
+        <circle cx="96" cy="252" r="3.4" fill="#7c2118" opacity=".5"/>
+        <!-- compass rose -->
+        <g transform="translate(530,395)" opacity=".75">
+          <circle r="30" fill="none" stroke="#7c5a2e" stroke-width="1"/>
+          <path d="M0,-30 L6,0 L0,30 L-6,0 Z" fill="#7c2118"/>
+          <path d="M-30,0 L0,-6 L30,0 L0,6 Z" fill="#8a6f3e"/>
+          <text x="0" y="-34" font-family="Cinzel" font-size="11" fill="#5a3f1d" text-anchor="middle">N</text>
+        </g>
+
+        <!-- ROUTE drawn by JS, plus seals -->
+        <path id="route" fill="none" stroke="#7c2118" stroke-width="2.6" stroke-dasharray="2 8"
+              stroke-linecap="round" opacity=".75"/>
+        <g id="seals"></g>
+      </svg>
+      <div class="legend">
+        <span><i style="background:#8d2418"></i>solved</span>
+        <span><i style="background:#c9a24a"></i>current trail</span>
+        <span><i style="background:rgba(201,162,74,.3)"></i>sealed</span>
+      </div>
+    </div>
+
+    <!-- CLUE STAGE -->
+    <div class="panel">
+      <div class="panel-pad stage" id="stage"><!-- filled by JS --></div>
+    </div>
+  </div>
+
+  <!-- CRYPTEX -->
+  <div class="cryptex">
+    <h3>◆ The Cryptex ◆ fragments recovered</h3>
+    <div class="frags" id="frags"></div>
+  </div>
+
+  <p class="foot">Every monument, symbol and date below is real. Stand in front of the stones and the answers are hiding in plain sight — exactly as a certain Harvard symbologist would have it.</p>
+</div>
+
+<!-- INTRO OVERLAY -->
+<div class="overlay show" id="intro">
+  <div class="card">
+    <div class="kicker">Istanbul · 03:14</div>
+    <p class="coin"><span class="spin">🪙</span></p>
+    <h2>A Cryptographer Is Dead</h2>
+    <p>In his hand, a brass coin — a serpent devouring its own tail. On the reverse, scratched in haste:</p>
+    <p style="font-style:italic;color:#e9cd7d">“The city remembers what the empires tried to erase. Walk the spine of the old Hippodrome. Begin where Egypt sleeps in Roman stone. Five truths. Then the last door opens.”</p>
+    <button class="btn" onclick="startHunt()">Begin the Hunt</button>
+  </div>
+</div>
+
+<!-- FINALE OVERLAY -->
+<div class="overlay" id="finale">
+  <div class="card">
+    <div class="kicker">Beneath the Great Dome</div>
+    <h2>The Treasure Was the Method</h2>
+    <p>There was no gold. The dead man left you a way of <i>seeing</i>.</p>
+    <p>Egypt's stone. Greece's serpent. The sultan's tiles. Medusa's mirror. All of it scraped over, written again, never truly erased — faith over faith, empire over empire, beneath one dome.</p>
+    <p style="color:#e9cd7d">You have been reading a <b>PALIMPSEST</b> all along. The treasure is Istanbul itself — a city that buries nothing, only layers it.</p>
+    <p style="font-style:italic">Case closed, Symbologist.</p>
+    <button class="btn" onclick="document.getElementById('finale').classList.remove('show')">Close the File</button>
+  </div>
+</div>
+
+<button class="btn ghost reset" onclick="resetHunt()">↺ Reset</button>
+
+<script>
+const STOPS = [
+  {
+    name:"The Obelisk of Theodosius",
+    where:"On the spina of the old Hippodrome (Sultanahmet Square)",
+    lat:41.0058986, lng:28.9753726,
+    narr:"You start where the coin commanded — before a needle of pink granite that has outlived every empire that ever claimed it.",
+    fact:"This obelisk was carved for the pharaoh <b>around 1450 BC</b> and first raised at the Temple of Karnak in Egypt. Emperor Theodosius I hauled it across the sea and set it on a Byzantine marble base — making it, by far, the <b>oldest monument in Istanbul</b>.",
+    label:"Cipher — numbers of the alphabet",
+    text:"20 · 8 · 21 · 20 · 13 · 15 · 19 · 5",
+    prompt:"Name the pharaoh whose stone this is.",
+    answer:"THUTMOSE",
+    hint:"Each number is a letter's position in the alphabet (1 = A, 2 = B…). His name is also carved on the base in Greek.",
+    frag:"EGYPT'S STONE", key:"THUTMOSE"
+  },
+  {
+    name:"The Serpent Column",
+    where:"A few steps north, sunk into the square",
+    lat:41.0056504, lng:28.9750772,
+    narr:"The pharaoh's name still ringing, you move to a twist of green bronze rising from a pit — three serpents, coiled, their golden tripod long stolen.",
+    fact:"Cast from the melted weapons of a defeated Persian army after the Greek victory at Plataea in <b>479 BC</b>, this column once stood at the Temple of Apollo in Delphi. The names of <b>31 allied Greek city-states</b> are still engraved on its coils.",
+    label:"Cipher — the mirror alphabet (Atbash)",
+    text:"W V O K S R",
+    prompt:"Decode the sacred site this serpent came from.",
+    answer:"DELPHI",
+    hint:"Atbash: the alphabet reversed. A becomes Z, B becomes Y, C becomes X… the first shall be last.",
+    frag:"GREECE'S SERPENT", key:"DELPHI"
+  },
+  {
+    name:"The Blue Mosque",
+    where:"Across the square, six minarets against the sky",
+    lat:41.0054096, lng:28.9768138,
+    narr:"Delphi decoded, the trail bends toward a cascade of domes and a count of minarets that once shook the Islamic world.",
+    fact:"When Sultan Ahmed I built this mosque, its <b>six minarets</b> caused scandal — said to rival the sanctuary at Mecca, until a seventh was added there to settle the offence. Inside glow more than <b>20,000 hand-painted İznik tiles</b>.",
+    label:"Cipher — a Caesar shift",
+    text:"Z O R K Y",
+    prompt:"Shift the letters back to name what glows inside.",
+    answer:"TILES",
+    hint:"Shift each letter backward through the alphabet. The key is the number of minarets piercing this sky.",
+    frag:"THE SULTAN'S TILES", key:"TILES"
+  },
+  {
+    name:"The Basilica Cistern",
+    where:"Underground, across from Hagia Sophia (Yerebatan Cd.)",
+    lat:41.008384, lng:28.977878,
+    narr:"You descend into cold water and forests of columns — the very chamber where a famous thriller reached its drowning climax.",
+    fact:"Among 336 columns, two rest on the carved face of <b>Medusa</b> — one turned on its side, one fully <b>upside down</b>. No record says why; the old belief held that inverting her gaze broke its power to turn men to stone.",
+    label:"Cipher — Medusa's reflection",
+    text:"N A T A B E R E Y",
+    prompt:"Read it as Medusa would — and name this sunken palace.",
+    answer:"YEREBATAN",
+    hint:"Medusa hangs upside down here, and so does the word. Reverse it — read its reflection.",
+    frag:"MEDUSA'S MIRROR", key:"YEREBATAN"
+  },
+  {
+    name:"Hagia Sophia",
+    where:"The great dome at the end of the trail",
+    lat:41.008583, lng:28.980175,
+    narr:"Four truths in hand, you climb toward the dome that has been church, mosque, museum, and mosque again — where the final door waits.",
+    fact:"Here golden Christian mosaics share a ceiling with vast Islamic calligraphy; a <b>Viking guard's runes</b> are scratched into a marble rail; emperors were crowned on the marble <b>omphalion</b>. Nothing was ever truly erased here — only written over.",
+    label:"The final riddle",
+    text:"FAITH OVER FAITH · STONE OVER STONE",
+    prompt:"A surface scraped clean and written again — never fully erased. Name it. (10 letters)",
+    answer:"PALIMPSEST",
+    hint:"A manuscript rubbed out and reused; a wall that is two truths at once. Ten letters, beginning with P.",
+    frag:"THE LAYERED TRUTH", key:"PALIMPSEST",
+    final:true
+  }
+];
+
+// --- tiny persistence wrapper (works even if storage is unavailable) ---
+let mem = {solved:0};
+async function save(){ try{ await window.storage.set('sultanahmet_progress', JSON.stringify(mem), false); }catch(e){} }
+async function load(){ try{ const r = await window.storage.get('sultanahmet_progress', false); if(r&&r.value) mem = JSON.parse(r.value); }catch(e){} }
+
+let solved = 0;       // number of stops completed
+let viewing = 0;      // which stop card is shown
+
+const stage = document.getElementById('stage');
+const sealsG = document.getElementById('seals');
+const fragsEl = document.getElementById('frags');
+
+function buildMap(){
+  // route through the seal coordinates (stylised from real relative geography)
+  const pts = STOPS.map(s=>s.mx+","+s.my);
+  // assign map coordinates (hand-placed to match real Sultanahmet layout)
+  // done below where seals are created
+}
+
+// stylised map coordinates faithful to real relative positions
+const MAP_XY = [ [185,318],[120,360],[270,350],[350,150],[500,128] ];
+
+function renderMap(){
+  // route line
+  const d = MAP_XY.map((p,i)=> (i? "L":"M")+p[0]+","+p[1]).join(" ");
+  document.getElementById('route').setAttribute('d', d);
+  sealsG.innerHTML = "";
+  STOPS.forEach((s,i)=>{
+    const [x,y]=MAP_XY[i];
+    const state = i<solved ? "solved" : (i===solved ? "current" : "locked");
+    const g = document.createElementNS("http://www.w3.org/2000/svg","g");
+    g.setAttribute("class","seal "+state);
+    g.setAttribute("transform",`translate(${x},${y})`);
+    g.innerHTML = `
+      <circle class="ring" r="20" fill="none" stroke="#c9a24a" stroke-width="2"/>
+      <circle class="disc" r="14" fill="${i<solved?'#8d2418':'rgba(124,33,24,.18)'}" stroke="#c9a24a" stroke-width="2"/>
+      <text class="num" y="5">${i<solved?'✦':(i+1)}</text>`;
+    if(i<=solved) g.addEventListener('click',()=>showStop(i));
+    sealsG.appendChild(g);
+  });
+}
+
+function renderFrags(){
+  fragsEl.innerHTML = "";
+  STOPS.forEach((s,i)=>{
+    const got = i<solved;
+    const row = document.createElement('div');
+    row.className = "frag"+(got?" got":"");
+    row.innerHTML = `<span class="dot"></span>
+      <span>${got? s.frag : "—— sealed ——"}</span>
+      <span class="key">${got? s.key : ""}</span>`;
+    fragsEl.appendChild(row);
+  });
+}
+
+function showStop(i){
+  viewing = i;
+  const s = STOPS[i];
+  const already = i<solved;
+  const navUrl = `https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lng}`;
+  stage.innerHTML = `
+    <div class="badge">Mark ${i+1} of 5${already?' · solved':''}</div>
+    <div class="stop-name">${s.name}</div>
+    <div class="stop-where">${s.where}</div>
+    <p class="narr">${s.narr}</p>
+    <p class="fact">${s.fact}</p>
+    <div class="cipher-box">
+      <div class="cipher-label">${s.label}</div>
+      <div class="cipher-text">${s.text}</div>
+      <div class="cipher-prompt">${s.prompt}</div>
+    </div>
+    ${already
+      ? `<p style="color:#e9cd7d;font-style:italic">✦ Already deciphered: <b style="font-family:var(--mono)">${s.key}</b></p>`
+      : `<div class="input-row">
+           <input id="ans" autocomplete="off" placeholder="your answer" maxlength="20"
+             onkeydown="if(event.key==='Enter')check()">
+           <button class="btn" onclick="check()">Decipher</button>
+         </div>
+         <div class="err" id="err"></div>`}
+    <div class="subactions">
+      <a class="nav-link" href="${navUrl}" target="_blank" rel="noopener">⌖ Navigate here</a>
+      ${already?'':'<button class="linkish" onclick="toggleHint()">Need a hint?</button>'}
+    </div>
+    ${already?'':`<div class="hint" id="hint">${s.hint}</div>`}
+  `;
+  if(!already){ const a=document.getElementById('ans'); if(a) a.focus(); }
+}
+
+function toggleHint(){ document.getElementById('hint').classList.toggle('show'); }
+
+function check(){
+  const s = STOPS[viewing];
+  const raw = (document.getElementById('ans').value||"").toUpperCase().replace(/[^A-Z]/g,"");
+  if(!raw){ return; }
+  if(raw === s.answer){
+    solved = Math.max(solved, viewing+1);
+    mem.solved = solved; save();
+    renderMap(); renderFrags();
+    const stagePanel = stage.closest('.panel');
+    stagePanel.classList.remove('unlock-flash'); void stagePanel.offsetWidth; stagePanel.classList.add('unlock-flash');
+    if(s.final){
+      setTimeout(()=>document.getElementById('finale').classList.add('show'), 500);
+    } else {
+      setTimeout(()=>showStop(viewing+1), 550);
+    }
+  } else {
+    const e = document.getElementById('err');
+    e.textContent = "The stones disagree. Look again — the answer is in front of you.";
+    const inp = document.getElementById('ans');
+    inp.style.borderColor = "#e8917f";
+    setTimeout(()=>inp.style.borderColor="",700);
+  }
+}
+
+function startHunt(){ document.getElementById('intro').classList.remove('show'); showStop(solved>=STOPS.length?STOPS.length-1:solved); }
+
+function resetHunt(){
+  solved = 0; viewing = 0; mem={solved:0}; save();
+  renderMap(); renderFrags();
+  document.getElementById('finale').classList.remove('show');
+  document.getElementById('intro').classList.add('show');
+}
+
+// boot
+(async ()=>{
+  await load();
+  solved = mem.solved||0;
+  renderMap(); renderFrags();
+  if(solved>0){ document.getElementById('intro').classList.remove('show'); showStop(Math.min(solved,STOPS.length-1)); }
+  else { showStop(0); }
+})();
+</script>

@@ -1,0 +1,4 @@
+# Phase 2: ADK agent for hunt generation + puzzle validation
+# Install: pip install -r requirements.txt
+google-cloud-aiplatform[agent_engines,adk]>=1.112
+python-dotenv>=1.0

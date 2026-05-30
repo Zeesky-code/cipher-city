@@ -1,0 +1,25 @@
+# dependencies
+node_modules/
+frontend/node_modules/
+
+# build outputs
+frontend/dist/
+frontend/.vite/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+agent/.venv/
+
+# secrets — never commit these
+.env
+agent/.env
+*.local
+
+# Claude Code internal files
+.claude/
+
+# OS
+.DS_Store
